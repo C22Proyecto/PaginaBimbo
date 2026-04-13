@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo Bimbo - Tienda Oficial</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="./png/bimbologo.png" alt="Bimbo">
+        </div>
+        <nav>
+            <a href="#nosotros">Nosotros</a>
+            <a href="#productos">Productos</a>
+            <a href="#contacto">Contacto</a>
+            <button onclick="toggleCarrito()" class="btn-carrito">
+                🛒 Carrito (<span id="contador-carrito">0</span>)
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="nosotros" class="seccion">
+            <h2>¿Quiénes Somos?</h2>
+            <p>Somos la panificadora más grande del mundo, horneando momentos felices.</p>
+            <div class="mision-vision">
+                <div class="caja">
+                    <h3>Misión</h3>
+                    <p>Alimentos deliciosos y nutritivos en las manos de todos.</p>
+                </div>
+                <div class="caja">
+                    <h3>Visión</h3>
+                    <p>Ser una empresa sustentable, productiva y plenamente humana.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="productos" class="seccion bg-gris">
+            <h2>Nuestros Productos</h2>
+            <div class="grid-productos">
+                <div class="producto">
+                    <div class="img-placeholder">🍞</div>
+                    <h3>Pan Blanco</h3>
+                    <p class="precio">$45.00</p>
+                    <button onclick="agregarAlCarrito('Pan Blanco', 45)">Añadir al carrito</button>
+                </div>
+                <div class="producto">
+                    <div class="img-placeholder">🍩</div>
+                    <h3>Donas</h3>
+                    <p class="precio">$35.00</p>
+                    <button onclick="agregarAlCarrito('Donas', 35)">Añadir al carrito</button>
+                </div>
+                <div class="producto">
+                    <div class="img-placeholder">🍪</div>
+                    <h3>Galletas</h3>
+                    <p class="precio">$25.00</p>
+                    <button onclick="agregarAlCarrito('Galletas', 25)">Añadir al carrito</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion">
+            <h2>Comercial Oficial</h2>
+            <div class="contenedor-video">
+               <iframe src="https://www.youtube.com/embed/Y0NQCsjLMQs" title="YouTube video player" frameborder="0" allow="accelerometer; 
+               autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+               </iframe>
+            </div>
+        </section>
+
+        <section id="contacto" class="seccion bg-gris">
+            <h2>Contacto</h2>
+            <form class="formulario" onsubmit="enviarFormulario(event)">
+                <input type="text" placeholder="Tu Nombre" required>
+                <input type="email" placeholder="Tu Correo" required>
+                <textarea placeholder="Tu Mensaje" rows="4" required></textarea>
+                <button type="submit">Enviar Mensaje</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Grupo Bimbo - Proyecto Escolar</p>
+    </footer>
+
+    <aside id="carrito-lateral" class="carrito-lateral">
+        <button class="cerrar-carrito" onclick="toggleCarrito()">❌</button>
+        <h2>Tu Carrito</h2>
+        <div id="lista-carrito"><p>El carrito está vacío.</p></div>
+        <div class="total-container">
+            <h3>Total: $<span id="precio-total">0.00</span></h3>
+            <button onclick="abrirModalPago()">Proceder al pago</button>
+        </div>
+    </aside>
+
+    <div id="modal-pago" class="modal-oculto">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalPago()">❌</span>
+            <h2>Finalizar Compra</h2>
+            <form onsubmit="procesarPago(event)">
+                <div class="grupo-input">
+                    <input type="text" placeholder="Tu nombre completo" required>
+                </div>
+                <div class="grupo-input">
+                    <input type="text" placeholder="Tu dirección de envío" required>
+                </div>
+                <p style="font-size:18px; font-weight:bold; color:#005b9f; margin:15px 0;">
+                    Total: $<span id="total-modal">0.00</span>
+                </p>
+                <button type="submit">Confirmar Compra</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <script type="module" src="./js/jav.js"></script>
+</body>
+</html>
