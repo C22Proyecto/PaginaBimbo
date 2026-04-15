@@ -143,6 +143,36 @@ async function enviarFormulario(event) {
     }
 }
 
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+const authContainer = document.getElementById('auth-container');
+
+// Función para manejar el estado del usuario
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // Usuario logueado: Mostramos su nombre y un botón de salir
+        authContainer.innerHTML = `
+            <div class="user-nav-info">
+                <span>Hola, ${user.displayName.split(' ')[0]}</span>
+                <button id="logoutBtn" style="background:none; border:none; color:red; cursor:pointer; text-decoration:underline;">Salir</button>
+            </div>
+        `;
+
+        document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+    } else {
+        // Usuario no logueado: Mostramos el botón de inicio
+        authContainer.innerHTML = `<button id="loginBtn" class="btn-auth">Ingresar</button>`;
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch(error => console.error(error));
+        });
+    }
+});
+
+
+
 window.toggleCarrito = toggleCarrito;
 window.agregarAlCarrito = agregarAlCarrito;
 window.eliminarDelCarrito = eliminarDelCarrito;
