@@ -3,23 +3,23 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// 2. Configuración de tu proyecto
+// 2. Configuración de tu proyecto (Bimbo Tienda)
 const firebaseConfig = {
-  apiKey: "AIzaSyCTMvwBPJxjGsyWpUN8jzGooAslhMu9QVA",
-  authDomain: "bimbotienda.firebaseapp.com",
-  projectId: "bimbotienda",
-  storageBucket: "bimbotienda.firebasestorage.app",
-  messagingSenderId: "542527915409",
-  appId: "1:542527915409:web:261774b18078774d568630"
+    apiKey: "AIzaSyCTMvwBPJxjGsyWpUN8jzGooAslhMu9QVA",
+    authDomain: "bimbotienda.firebaseapp.com",
+    projectId: "bimbotienda",
+    storageBucket: "bimbotienda.firebasestorage.app",
+    messagingSenderId: "542527915409",
+    appId: "1:542527915409:web:261774b18078774d568630"
 };
 
 // 3. Inicialización de servicios
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app); // Importante: pasar 'app' aquí
+const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// 4. Variables de estado del Carrito
+// 4. Variables de estado
 let carrito = [];
 let totalActual = 0;
 
@@ -39,8 +39,8 @@ function mostrarToast(mensaje, tipo = 'info') {
 }
 
 function toggleCarrito() {
-    const carritoLateral = document.getElementById('carrito-lateral');
-    if (carritoLateral) carritoLateral.classList.toggle('abierto');
+    const panel = document.getElementById('carrito-lateral');
+    if (panel) panel.classList.toggle('abierto');
 }
 
 // --- LÓGICA DEL CARRITO ---
@@ -53,7 +53,7 @@ function agregarAlCarrito(nombreProducto, precio) {
     const contador = document.getElementById('contador-carrito');
     if (contador) {
         contador.classList.remove('animar-contador');
-        void contador.offsetWidth; // Truco para reiniciar la animación CSS
+        void contador.offsetWidth; 
         contador.classList.add('animar-contador');
     }
 }
@@ -64,7 +64,6 @@ function actualizarCarrito() {
     const precioTotal = document.getElementById('precio-total');
     
     if (!listaCarrito) return;
-    
     listaCarrito.innerHTML = '';
     totalActual = 0;
 
@@ -97,9 +96,15 @@ function eliminarDelCarrito(indice) {
     actualizarCarrito();
 }
 
-// --- PROCESOS DE PAGO Y FORMULARIOS (FIRESTORE) ---
+// --- PROCESOS DE PAGO Y FIRESTORE (RESTRIGIDO A LOGIN) ---
 
 function abrirModalPago() {
+    // BLOQUEO: Si no hay sesión, no abre el modal
+    if (!auth.currentUser) {
+        mostrarToast("Debes iniciar sesión para realizar un pedido.", "error");
+        return;
+    }
+
     if (carrito.length === 0) {
         mostrarToast("Tu carrito está vacío.", "error");
     } else {
@@ -115,6 +120,13 @@ function cerrarModalPago() {
 
 async function procesarPago(event) {
     event.preventDefault();
+
+    // Verificación de seguridad secundaria
+    if (!auth.currentUser) {
+        mostrarToast("Sesión no detectada.", "error");
+        return;
+    }
+
     const form = event.target;
     const nombre = form[0].value;
     const direccion = form[1].value;
@@ -123,10 +135,11 @@ async function procesarPago(event) {
         await addDoc(collection(db, "pedidos"), {
             cliente: nombre,
             direccion: direccion,
+            email: auth.currentUser.email,
+            uid: auth.currentUser.uid,
             productos: carrito.map(p => ({ nombre: p.nombre, precio: p.precio })),
             total: totalActual,
-            fecha: serverTimestamp(),
-            usuarioId: auth.currentUser ? auth.currentUser.uid : "Anónimo"
+            fecha: serverTimestamp()
         });
 
         mostrarToast("¡Compra confirmada!", 'success');
@@ -158,16 +171,15 @@ async function enviarFormulario(event) {
             mensaje: mensaje,
             fecha: serverTimestamp()
         });
-
         mostrarToast("¡Mensaje enviado!", "success");
         form.reset();
     } catch (error) {
-        mostrarToast("Error al enviar el mensaje.", "error");
+        mostrarToast("Error al enviar.", "error");
         console.error(error);
     }
 }
 
-// --- AUTENTICACIÓN (FIREBASE AUTH) ---
+// --- SISTEMA DE AUTENTICACIÓN ---
 
 const authContainer = document.getElementById('auth-container');
 
@@ -175,11 +187,11 @@ onAuthStateChanged(auth, (user) => {
     if (!authContainer) return;
 
     if (user) {
-        // Interfaz cuando el usuario está logueado
+        // Interfaz con sesión activa
         authContainer.innerHTML = `
             <div class="user-nav-info" style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 0.9rem;">Hola, ${user.displayName.split(' ')[0]}</span>
-                <button id="logoutBtn" style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-weight:bold;">Salir</button>
+                <span style="font-size: 0.9rem; font-weight: bold;">Hola, ${user.displayName.split(' ')[0]}</span>
+                <button id="logoutBtn" style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-weight:bold; text-decoration:underline;">Salir</button>
             </div>
         `;
 
@@ -187,22 +199,22 @@ onAuthStateChanged(auth, (user) => {
             signOut(auth).then(() => mostrarToast("Sesión cerrada", "info"));
         });
     } else {
-        // Interfaz cuando no hay sesión
+        // Interfaz sin sesión
         authContainer.innerHTML = `<button id="loginBtn" class="btn-auth">Ingresar</button>`;
 
         document.getElementById('loginBtn').addEventListener('click', async () => {
             try {
                 await signInWithPopup(auth, provider);
-                mostrarToast("Sesión iniciada", "success");
+                mostrarToast("Bienvenido", "success");
             } catch (error) {
-                console.error("Error Login:", error);
-                mostrarToast("Error al ingresar", "error");
+                console.error("Error Auth:", error);
+                mostrarToast("Error al conectar con Google", "error");
             }
         });
     }
 });
 
-// --- EXPOSICIÓN GLOBAL PARA HTML ---
+// --- EXPOSICIÓN GLOBAL ---
 window.toggleCarrito = toggleCarrito;
 window.agregarAlCarrito = agregarAlCarrito;
 window.eliminarDelCarrito = eliminarDelCarrito;
