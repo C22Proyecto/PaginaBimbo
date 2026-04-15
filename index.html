@@ -11,14 +11,20 @@
         <div class="logo">
             <img src="./png/bimbologo.png" alt="Bimbo">
         </div>
-        <nav>
-            <a href="#nosotros">Nosotros</a>
-            <a href="#productos">Productos</a>
-            <a href="#contacto">Contacto</a>
-            <button onclick="toggleCarrito()" class="btn-carrito">
-                🛒 Carrito (<span id="contador-carrito">0</span>)
-            </button>
-        </nav>
+       <nav>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#productos">Productos</a>
+    <a href="#contacto">Contacto</a>
+    
+    <button onclick="toggleCarrito()" class="btn-carrito">
+        🛒 Carrito (<span id="contador-carrito">0</span>)
+    </button>
+
+    <div id="auth-container" style="display: inline-block; margin-left: 15px;">
+        <button id="loginBtn" class="btn-auth">Ingresar</button>
+    </div>
+</nav>
+        
     </header>
 
     <main>
