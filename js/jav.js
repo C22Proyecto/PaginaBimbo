@@ -1,7 +1,9 @@
+// 1. Importaciones de Firebase (Versión unificada 10.12.0)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } 
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+// 2. Configuración de tu proyecto
 const firebaseConfig = {
   apiKey: "AIzaSyCTMvwBPJxjGsyWpUN8jzGooAslhMu9QVA",
   authDomain: "bimbotienda.firebaseapp.com",
@@ -11,47 +13,65 @@ const firebaseConfig = {
   appId: "1:542527915409:web:261774b18078774d568630"
 };
 
+// 3. Inicialización de servicios
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app); // Importante: pasar 'app' aquí
+const provider = new GoogleAuthProvider();
 
+// 4. Variables de estado del Carrito
 let carrito = [];
 let totalActual = 0;
 
+// --- FUNCIONES DE INTERFAZ (UI) ---
+
 function mostrarToast(mensaje, tipo = 'info') {
     const contenedor = document.getElementById('toast-container');
+    if (!contenedor) return;
+    
     const toast = document.createElement('div');
     toast.className = `toast ${tipo}`;
-    const icono = tipo === 'success' ? '✅' : '🍞';
+    const icono = tipo === 'success' ? '✅' : (tipo === 'error' ? '❌' : '🍞');
     toast.innerHTML = `<span>${icono} ${mensaje}</span>`;
+    
     contenedor.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
 
 function toggleCarrito() {
-    document.getElementById('carrito-lateral').classList.toggle('abierto');
+    const carritoLateral = document.getElementById('carrito-lateral');
+    if (carritoLateral) carritoLateral.classList.toggle('abierto');
 }
+
+// --- LÓGICA DEL CARRITO ---
 
 function agregarAlCarrito(nombreProducto, precio) {
     carrito.push({ nombre: nombreProducto, precio: precio });
     actualizarCarrito();
-    mostrarToast(nombreProducto + ' agregado al carrito.', 'info');
+    mostrarToast(`${nombreProducto} agregado.`, 'info');
+    
     const contador = document.getElementById('contador-carrito');
-    contador.classList.remove('animar-contador');
-    void contador.offsetWidth;
-    contador.classList.add('animar-contador');
+    if (contador) {
+        contador.classList.remove('animar-contador');
+        void contador.offsetWidth; // Truco para reiniciar la animación CSS
+        contador.classList.add('animar-contador');
+    }
 }
 
 function actualizarCarrito() {
     const listaCarrito = document.getElementById('lista-carrito');
     const contadorCarrito = document.getElementById('contador-carrito');
     const precioTotal = document.getElementById('precio-total');
+    
+    if (!listaCarrito) return;
+    
     listaCarrito.innerHTML = '';
     totalActual = 0;
 
     if (carrito.length === 0) {
         listaCarrito.innerHTML = '<p>El carrito está vacío.</p>';
-        contadorCarrito.innerText = '0';
-        precioTotal.innerText = '0.00';
+        if (contadorCarrito) contadorCarrito.innerText = '0';
+        if (precioTotal) precioTotal.innerText = '0.00';
         return;
     }
 
@@ -68,8 +88,8 @@ function actualizarCarrito() {
         listaCarrito.appendChild(div);
     });
 
-    contadorCarrito.innerText = carrito.length;
-    precioTotal.innerText = totalActual.toFixed(2);
+    if (contadorCarrito) contadorCarrito.innerText = carrito.length;
+    if (precioTotal) precioTotal.innerText = totalActual.toFixed(2);
 }
 
 function eliminarDelCarrito(indice) {
@@ -77,11 +97,14 @@ function eliminarDelCarrito(indice) {
     actualizarCarrito();
 }
 
+// --- PROCESOS DE PAGO Y FORMULARIOS (FIRESTORE) ---
+
 function abrirModalPago() {
     if (carrito.length === 0) {
-        mostrarToast("Tu carrito está vacío. ¡Agrega productos primero!", "error");
+        mostrarToast("Tu carrito está vacío.", "error");
     } else {
-        document.getElementById('total-modal').innerText = totalActual.toFixed(2);
+        const modalTotal = document.getElementById('total-modal');
+        if (modalTotal) modalTotal.innerText = totalActual.toFixed(2);
         document.getElementById('modal-pago').style.display = 'flex';
     }
 }
@@ -98,23 +121,25 @@ async function procesarPago(event) {
 
     try {
         await addDoc(collection(db, "pedidos"), {
-            nombre: nombre,
+            cliente: nombre,
             direccion: direccion,
             productos: carrito.map(p => ({ nombre: p.nombre, precio: p.precio })),
             total: totalActual,
-            fecha: serverTimestamp()
+            fecha: serverTimestamp(),
+            usuarioId: auth.currentUser ? auth.currentUser.uid : "Anónimo"
         });
 
-        mostrarToast("¡Compra confirmada! Gracias por tu pedido.", 'success');
+        mostrarToast("¡Compra confirmada!", 'success');
         carrito = [];
         actualizarCarrito();
         cerrarModalPago();
+        
         const panel = document.getElementById('carrito-lateral');
-        if (panel.classList.contains('abierto')) toggleCarrito();
+        if (panel && panel.classList.contains('abierto')) toggleCarrito();
         form.reset();
 
     } catch (error) {
-        mostrarToast("Error al guardar el pedido. Intenta de nuevo.", "error");
+        mostrarToast("Error al procesar el pedido.", "error");
         console.error(error);
     }
 }
@@ -134,45 +159,50 @@ async function enviarFormulario(event) {
             fecha: serverTimestamp()
         });
 
-        mostrarToast("¡Mensaje enviado! Nos pondremos en contacto contigo.", "success");
+        mostrarToast("¡Mensaje enviado!", "success");
         form.reset();
-
     } catch (error) {
-        mostrarToast("Error al enviar el mensaje. Intenta de nuevo.", "error");
+        mostrarToast("Error al enviar el mensaje.", "error");
         console.error(error);
     }
 }
 
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+// --- AUTENTICACIÓN (FIREBASE AUTH) ---
 
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
 const authContainer = document.getElementById('auth-container');
 
-// Función para manejar el estado del usuario
 onAuthStateChanged(auth, (user) => {
+    if (!authContainer) return;
+
     if (user) {
-        // Usuario logueado: Mostramos su nombre y un botón de salir
+        // Interfaz cuando el usuario está logueado
         authContainer.innerHTML = `
-            <div class="user-nav-info">
-                <span>Hola, ${user.displayName.split(' ')[0]}</span>
-                <button id="logoutBtn" style="background:none; border:none; color:red; cursor:pointer; text-decoration:underline;">Salir</button>
+            <div class="user-nav-info" style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 0.9rem;">Hola, ${user.displayName.split(' ')[0]}</span>
+                <button id="logoutBtn" style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-weight:bold;">Salir</button>
             </div>
         `;
 
-        document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => mostrarToast("Sesión cerrada", "info"));
+        });
     } else {
-        // Usuario no logueado: Mostramos el botón de inicio
+        // Interfaz cuando no hay sesión
         authContainer.innerHTML = `<button id="loginBtn" class="btn-auth">Ingresar</button>`;
 
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).catch(error => console.error(error));
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            try {
+                await signInWithPopup(auth, provider);
+                mostrarToast("Sesión iniciada", "success");
+            } catch (error) {
+                console.error("Error Login:", error);
+                mostrarToast("Error al ingresar", "error");
+            }
         });
     }
 });
 
-
-
+// --- EXPOSICIÓN GLOBAL PARA HTML ---
 window.toggleCarrito = toggleCarrito;
 window.agregarAlCarrito = agregarAlCarrito;
 window.eliminarDelCarrito = eliminarDelCarrito;
