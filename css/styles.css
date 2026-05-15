@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Paytone+One&display=swap');
+
+:root {
+    --azul: #005b9f;
+    --rojo: #e8112d;
+    --azul-oscuro: #003f73;
+    --rojo-oscuro: #b30d22;
+    --gris-claro: #f4f6fb;
+    --blanco: #ffffff;
+    --sombra: 0 8px 30px rgba(0, 91, 159, 0.12);
+    --radio: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #fff;
+    color: #333;
+    overflow-x: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, var(--azul) 0%, var(--azul-oscuro) 100%);
+    color: white;
+    padding: 12px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.logo { width: 130px; }
+.logo img { width: 100%; height: auto; display: block; }
+
+nav { display: flex; align-items: center; gap: 24px; }
+nav a { color: white; text-decoration: none; font-weight: 700; font-size: 15px; transition: 0.3s; position: relative; padding-bottom: 2px; }
+nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #ffd1d5; transition: width 0.3s; }
+nav a:hover::after { width: 100%; }
+nav a:hover { color: #ffd1d5; }
+
+.btn-carrito {
+    background-color: var(--rojo);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-carrito:hover { transform: scale(1.08); background-color: var(--rojo-oscuro); }
+
+.badge {
+    background: #ffd700;
+    color: #333;
+    font-weight: 900;
+    font-size: 12px;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.badge.pop { animation: badgePop 0.4s ease; }
+@keyframes badgePop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.6); } }
+
+/* HERO */
+.hero {
+    background: linear-gradient(135deg, var(--azul) 0%, #0077cc 60%, #0099ff 100%);
+    color: white;
+    padding: 80px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before { content: ''; position: absolute; width: 500px; height: 500px; background: rgba(255,255,255,0.05); border-radius: 50%; top: -150px; right: -100px; }
+.hero-content { max-width: 550px; z-index: 1; }
+.hero-tag { background: rgba(255,255,255,0.2); display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 700; margin-bottom: 18px; }
+.hero-content h1 { font-family: 'Paytone One', sans-serif; font-size: clamp(32px, 5vw, 54px); line-height: 1.1; margin-bottom: 24px; }
+.hero-content h1 span { color: #ffd700; }
+.btn-hero { background: #ffd700; color: #333; padding: 14px 32px; border-radius: 30px; text-decoration: none; font-weight: 900; font-size: 16px; transition: transform 0.3s, box-shadow 0.3s; display: inline-block; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+.btn-hero:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+.hero-emojis { font-size: 50px; display: flex; flex-direction: column; gap: 10px; z-index: 1; }
+.hero-emojis span { animation: flotar 3s ease-in-out infinite; display: inline-block; }
+.float1 { animation-delay: 0s; } .float2 { animation-delay: 0.4s; } .float3 { animation-delay: 0.8s; } .float4 { animation-delay: 1.2s; } .float5 { animation-delay: 1.6s; }
+@keyframes flotar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+/* SECCIONES */
+.seccion { padding: 70px 20px; text-align: center; max-width: 1100px; margin: 0 auto; }
+.bg-gris { background-color: var(--gris-claro); max-width: 100%; }
+h2 { color: var(--azul); font-family: 'Paytone One', sans-serif; font-size: 32px; margin-bottom: 8px; }
+.subtitulo { color: #888; font-size: 16px; margin-bottom: 40px; }
+
+/* MISIÓN/VISIÓN */
+.mision-vision { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 10px; }
+.caja { background: white; padding: 30px 24px; border-radius: var(--radio); box-shadow: var(--sombra); width: 280px; transition: transform 0.3s, box-shadow 0.3s; }
+.caja:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(0,91,159,0.2); }
+.caja-icono { font-size: 40px; margin-bottom: 12px; }
+.caja h3 { color: var(--rojo); margin-bottom: 10px; font-size: 20px; }
+
+/* BUSCADOR */
+.buscador-container { margin-bottom: 30px; }
+.buscador-container input { width: 100%; max-width: 420px; padding: 14px 20px; border: 2px solid #dde4f0; border-radius: 30px; font-size: 15px; font-family: 'Nunito', sans-serif; outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
+.buscador-container input:focus { border-color: var(--azul); box-shadow: 0 0 0 4px rgba(0,91,159,0.1); }
+
+/* PRODUCTOS */
+.grid-productos { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+.producto { background: white; padding: 28px 22px; border-radius: var(--radio); box-shadow: var(--sombra); width: 240px; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.producto:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,91,159,0.18); }
+.img-placeholder { font-size: 64px; transition: transform 0.3s; line-height: 1; }
+.producto:hover .img-placeholder { transform: scale(1.2) rotate(10deg); }
+.producto h3 { font-size: 15px; font-weight: 800; color: #222; text-align: center; }
+.precio { font-size: 24px; font-weight: 900; color: var(--azul); }
+
+.cantidad-control { display: flex; align-items: center; border: 2px solid #e0e8f5; border-radius: 30px; overflow: hidden; margin: 4px 0; }
+.btn-cantidad { background: var(--gris-claro); color: var(--azul); border: none; width: 36px; height: 36px; font-size: 20px; font-weight: 900; cursor: pointer; transition: background 0.2s; border-radius: 0; padding: 0; line-height: 1; }
+.btn-cantidad:hover { background: #dce8f8; }
+.btn-cantidad:active { transform: scale(0.9); }
+.cantidad-valor { min-width: 36px; text-align: center; font-size: 16px; font-weight: 800; color: #333; }
+
+.btn-agregar { background: var(--azul); color: white; border: none; padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: 800; font-family: 'Nunito', sans-serif; width: 100%; font-size: 14px; transition: 0.3s; margin-top: 4px; }
+.btn-agregar:hover { background: var(--rojo); }
+.btn-agregar:active { transform: scale(0.95); }
+
+.producto.agregado .img-placeholder { animation: shake 0.4s ease; }
+@keyframes shake { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-15deg) scale(1.2); } 75% { transform: rotate(15deg) scale(1.2); } }
+
+/* VIDEO */
+.contenedor-video { width: 100%; max-width: 750px; margin: 0 auto; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,0.2); }
+.contenedor-video iframe { width: 100%; height: 100%; border: none; }
+
+/* FORMULARIO */
+button { font-family: 'Nunito', sans-serif; font-weight: 800; }
+.formulario { display: flex; flex-direction: column; gap: 14px; max-width: 500px; margin: 0 auto; }
+.formulario input, .formulario textarea { padding: 14px 16px; border: 2px solid #dde4f0; border-radius: 12px; outline: none; font-family: 'Nunito', sans-serif; font-size: 15px; transition: border-color 0.3s; }
+.formulario input:focus, .formulario textarea:focus { border-color: var(--azul); }
+.formulario button { background: var(--azul); color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-size: 16px; transition: 0.3s; }
+.formulario button:hover { background: var(--rojo); }
+
+/* CARRITO LATERAL */
+.carrito-lateral { position: fixed; top: 0; right: -420px; width: 370px; height: 100vh; background: white; box-shadow: -5px 0 40px rgba(0,0,0,0.15); transition: right 0.4s cubic-bezier(0.25,0.8,0.25,1); padding: 24px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 16px; }
+.carrito-lateral.abierto { right: 0; }
+.carrito-lateral h2 { color: var(--azul); font-size: 22px; }
+.cerrar-carrito { background: none; color: #aaa; font-size: 20px; width: auto; cursor: pointer; float: right; padding: 0; border: none; transition: 0.3s; }
+.cerrar-carrito:hover { color: var(--rojo); transform: rotate(90deg); }
+#lista-carrito { flex: 1; overflow-y: auto; }
+.carrito-vacio { color: #aaa; text-align: center; margin-top: 20px; }
+.carrito-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-weight: 700; }
+.btn-eliminar { background: #fff0f0; color: var(--rojo); border: none; border-radius: 8px; padding: 4px 10px; width: auto; cursor: pointer; font-size: 12px; margin-left: 10px; transition: 0.2s; }
+.btn-eliminar:hover { background: var(--rojo); color: white; }
+.total-container { border-top: 2px solid #f0f0f0; padding-top: 16px; }
+.total-container h3 { color: var(--azul); font-size: 20px; margin-bottom: 12px; }
+.total-container button { background: var(--rojo); color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-size: 15px; width: 100%; transition: 0.3s; }
+.total-container button:hover { background: var(--rojo-oscuro); }
+
+/* MODAL */
+.modal-oculto { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+.modal-contenido { background: white; padding: 36px 32px; border-radius: 20px; width: 90%; max-width: 440px; animation: modalEntrada 0.4s ease-out; position: relative; }
+@keyframes modalEntrada { from { transform: scale(0.7) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+.modal-contenido h2 { color: var(--azul); margin-bottom: 20px; font-size: 22px; }
+.cerrar-modal { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #aaa; width: auto; padding: 0; transition: 0.3s; }
+.cerrar-modal:hover { color: var(--rojo); transform: rotate(90deg); }
+.grupo-input { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.grupo-input label { font-weight: 700; font-size: 13px; color: #555; }
+.grupo-input input { padding: 12px 14px; border: 2px solid #dde4f0; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 15px; outline: none; transition: border-color 0.3s; }
+.grupo-input input:focus { border-color: var(--azul); }
+.total-modal-texto { font-size: 18px; font-weight: 900; color: var(--azul); margin: 18px 0; background: var(--gris-claro); padding: 12px; border-radius: 10px; text-align: center; }
+.modal-contenido button[type="submit"] { background: var(--rojo); color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-size: 16px; width: 100%; transition: 0.3s; }
+.modal-contenido button[type="submit"]:hover { background: var(--rojo-oscuro); }
+
+/* TOASTS */
+#toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+.toast { background: var(--azul); color: white; padding: 14px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); animation: slideIn 0.4s forwards; max-width: 300px; }
+.toast.success { background: #1a8a4a; }
+.toast.error { background: var(--rojo); }
+@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
+
+/* FOOTER */
+footer { background: linear-gradient(135deg, #222, #333); color: white; padding: 28px; text-align: center; margin-top: 40px; font-weight: 600; }
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+    .hero { flex-direction: column; text-align: center; padding: 50px 5%; }
+    .hero-emojis { flex-direction: row; justify-content: center; }
+    .carrito-lateral { width: 100%; right: -100%; }
+    .carrito-lateral.abierto { right: 0; }
+    nav a { display: none; }
+    .mision-vision { flex-direction: column; align-items: center; }
+    .caja { width: 100%; max-width: 320px; }
+}
