@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo Bimbo - Tienda Oficial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Paytone+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="./png/bimbologo.png" alt="Bimbo">
+        </div>
+        <nav>
+            <a href="#nosotros">Nosotros</a>
+            <a href="#productos">Productos</a>
+            <a href="#contacto">Contacto</a>
+            <button onclick="toggleCarrito()" class="btn-carrito">
+                🛒 Carrito
+                <span class="badge" id="badge-carrito">0</span>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-content">
+                <p class="hero-tag">🍞 La panadería más grande del mundo</p>
+                <h1>Sabor que <span>enamora</span><br>en cada mordida</h1>
+                <a href="#productos" class="btn-hero">Ver productos</a>
+            </div>
+            <div class="hero-emojis">
+                <span class="float1">🍞</span>
+                <span class="float2">🍩</span>
+                <span class="float3">🍪</span>
+                <span class="float4">🥐</span>
+                <span class="float5">🧁</span>
+            </div>
+        </section>
+
+        <section id="nosotros" class="seccion">
+            <h2>¿Quiénes Somos?</h2>
+            <p class="subtitulo">Somos la panificadora más grande del mundo, horneando momentos felices desde 1945.</p>
+            <div class="mision-vision">
+                <div class="caja">
+                    <div class="caja-icono">🎯</div>
+                    <h3>Misión</h3>
+                    <p>Alimentos deliciosos y nutritivos en las manos de todos.</p>
+                </div>
+                <div class="caja">
+                    <div class="caja-icono">🌟</div>
+                    <h3>Visión</h3>
+                    <p>Ser una empresa sustentable, productiva y plenamente humana.</p>
+                </div>
+                <div class="caja">
+                    <div class="caja-icono">❤️</div>
+                    <h3>Valores</h3>
+                    <p>Pasión, equipo, confianza, calidad e innovación constante.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="productos" class="seccion bg-gris">
+            <h2>Nuestros Productos</h2>
+            <p class="subtitulo">Encuentra tus favoritos de siempre</p>
+
+            <div class="buscador-container">
+                <input type="text" id="buscador" placeholder="🔍 Buscar producto..." oninput="filtrarProductos()" />
+            </div>
+
+            <div class="grid-productos" id="grid-productos">
+
+                <div class="producto" data-nombre="pan blanco">
+                    <div class="img-placeholder">🍞</div>
+                    <h3>Paquete de Pan Blanco</h3>
+                    <p class="precio">$4.00</p>
+                    <div class="cantidad-control">
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, -1)">−</button>
+                        <span class="cantidad-valor">1</span>
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, 1)">+</button>
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Pan Blanco', 4, this)">Añadir al carrito</button>
+                </div>
+
+                <div class="producto" data-nombre="donas">
+                    <div class="img-placeholder">🍩</div>
+                    <h3>Paquete x2 Donas</h3>
+                    <p class="precio">$2.00</p>
+                    <div class="cantidad-control">
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, -1)">−</button>
+                        <span class="cantidad-valor">1</span>
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, 1)">+</button>
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Donas', 2, this)">Añadir al carrito</button>
+                </div>
+
+                <div class="producto" data-nombre="galletas">
+                    <div class="img-placeholder">🍪</div>
+                    <h3>Paquete x2 Galletas</h3>
+                    <p class="precio">$2.00</p>
+                    <div class="cantidad-control">
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, -1)">−</button>
+                        <span class="cantidad-valor">1</span>
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, 1)">+</button>
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Galletas', 2, this)">Añadir al carrito</button>
+                </div>
+
+                <div class="producto" data-nombre="croissant mantequilla">
+                    <div class="img-placeholder">🥐</div>
+                    <h3>Croissant de Mantequilla</h3>
+                    <p class="precio">$3.50</p>
+                    <div class="cantidad-control">
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, -1)">−</button>
+                        <span class="cantidad-valor">1</span>
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, 1)">+</button>
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Croissant', 3.50, this)">Añadir al carrito</button>
+                </div>
+
+                <div class="producto" data-nombre="cupcake muffin">
+                    <div class="img-placeholder">🧁</div>
+                    <h3>Paquete x3 Cupcakes</h3>
+                    <p class="precio">$5.00</p>
+                    <div class="cantidad-control">
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, -1)">−</button>
+                        <span class="cantidad-valor">1</span>
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, 1)">+</button>
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Cupcakes', 5, this)">Añadir al carrito</button>
+                </div>
+
+                <div class="producto" data-nombre="pan dulce conchas">
+                    <div class="img-placeholder">🍬</div>
+                    <h3>Pan Dulce Surtido</h3>
+                    <p class="precio">$6.00</p>
+                    <div class="cantidad-control">
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, -1)">−</button>
+                        <span class="cantidad-valor">1</span>
+                        <button class="btn-cantidad" onclick="cambiarCantidad(this, 1)">+</button>
+                    </div>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Pan Dulce', 6, this)">Añadir al carrito</button>
+                </div>
+
+            </div>
+            <p id="sin-resultados" style="display:none; color:#999; margin-top:20px;">😔 No se encontraron productos.</p>
+        </section>
+
+        <section class="seccion">
+            <h2>Comercial Oficial</h2>
+            <div class="contenedor-video">
+               <iframe src="https://www.youtube.com/embed/Y0NQCsjLMQs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <section id="contacto" class="seccion bg-gris">
+            <h2>Contacto</h2>
+            <p class="subtitulo">¿Tienes dudas? ¡Escríbenos!</p>
+            <form class="formulario" onsubmit="enviarFormulario(event)">
+                <input type="text" placeholder="Tu Nombre" required>
+                <input type="email" placeholder="Tu Correo" required>
+                <textarea placeholder="Tu Mensaje" rows="4" required></textarea>
+                <button type="submit">Enviar Mensaje ✉️</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>🍞 &copy; 2026 Grupo Bimbo - Proyecto Escolar</p>
+        <p style="font-size:13px; margin-top:5px; opacity:0.6;">Hecho con ❤️</p>
+    </footer>
+
+    <aside id="carrito-lateral" class="carrito-lateral">
+        <button class="cerrar-carrito" onclick="toggleCarrito()">❌</button>
+        <h2>🛒 Tu Carrito</h2>
+        <div id="lista-carrito"><p class="carrito-vacio">El carrito está vacío.</p></div>
+        <div class="total-container">
+            <h3>Total: $<span id="precio-total">0.00</span></h3>
+            <button onclick="abrirModalPago()">Proceder al pago 💳</button>
+        </div>
+    </aside>
+
+    <div id="modal-pago" class="modal-oculto">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalPago()">❌</span>
+            <h2>💳 Finalizar Compra</h2>
+            <form onsubmit="procesarPago(event)">
+                <div class="grupo-input">
+                    <label>Nombre completo</label>
+                    <input type="text" placeholder="Ej. Juan Pérez" required>
+                </div>
+                <div class="grupo-input">
+                    <label>Dirección de envío</label>
+                    <input type="text" placeholder="Calle, colonia, ciudad" required>
+                </div>
+                <p class="total-modal-texto">
+                    Total a pagar: $<span id="total-modal">0.00</span>
+                </p>
+                <button type="submit">✅ Confirmar Compra</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <script type="module" src="./js/jav.js"></script>
+</body>
+</html>
